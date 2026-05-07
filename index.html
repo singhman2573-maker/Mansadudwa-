@@ -3,131 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VibeNet Ultra - Mansingh</title>
+    <title>VibeNet Pro - Mansingh</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --ig-blue: #0095f6; --bg-black: #000; --border: #262626; }
-        body { background: var(--bg-black); color: #fff; font-family: -apple-system, sans-serif; margin: 0; overflow: hidden; }
+        :root { --ig-blue: #0095f6; --bg: #000; --border: #262626; }
+        body { background: var(--bg); color: #fff; font-family: -apple-system, sans-serif; margin: 0; overflow: hidden; }
+        .section { height: 100vh; display: none; }
+        .active { display: block; }
         
-        .section { height: 100vh; display: none; overflow: hidden; }
-        .active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        /* Reels Pro Engine */
+        .reels-scroll { height: calc(100vh - 65px); overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+        .reels-scroll::-webkit-scrollbar { display: none; }
+        .reel-box { height: calc(100vh - 65px); scroll-snap-align: start; position: relative; background: #000; }
+        .video-wrap { width: 100%; height: 100%; overflow: hidden; position: relative; }
+        iframe { width: 100vw; height: 177.77vw; min-height: 100vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
 
-        /* Reels High-End Engine */
-        .reels-container { height: calc(100vh - 65px); overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
-        .reels-container::-webkit-scrollbar { display: none; }
-        .reel-box { height: calc(100vh - 65px); scroll-snap-align: start; position: relative; width: 100vw; background: #000; border-bottom: 1px solid #111; }
+        /* Sound Button Animation */
+        .sound-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0; transition: 0.3s; pointer-events: none; }
         
-        .video-container { width: 100%; height: 100%; position: relative; overflow: hidden; }
-        iframe { width: 100vw; height: 177.77vw; min-height: 100vh; min-width: 56.25vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+        /* Chat Bubble Animation */
+        .msg { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 8px; max-width: 80%; padding: 10px 14px; border-radius: 18px; font-size: 14px; }
+        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* Message Animations */
-        .msg-pop { animation: backInRight 0.5s; }
-        .msg-in { animation: backInLeft 0.5s; }
-
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
-        .blue-tick { color: var(--ig-blue); font-size: 14px; margin-left: 4px; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .nav { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
     </style>
 </head>
 <body>
 
-    <div id="home" class="section">
-        <div class="flex justify-between items-center p-4 border-b border-[#262626] sticky top-0 bg-black z-50">
-            <h1 class="text-2xl font-bold italic tracking-tighter">VibeNet</h1>
-            <div class="flex gap-5 text-xl">
-                <i class="far fa-heart"></i>
-                <i class="fab fa-facebook-messenger" onclick="showTab('chat')"></i>
-            </div>
-        </div>
-        <div class="flex flex-col items-center justify-center h-[70vh] text-center px-6">
-            <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 mb-4 animate-pulse">
-                <div class="w-full h-full rounded-full bg-black flex items-center justify-center font-bold">MS</div>
-            </div>
-            <h2 class="text-xl font-bold">Mansingh Rathore <i class="fas fa-check-circle blue-tick"></i></h2>
-            <p class="text-gray-400 text-sm mt-2">Dubai 2030 Vision | Institutional Trader 📉</p>
-            <button onclick="showTab('reels')" class="mt-6 bg-blue-500 px-6 py-2 rounded-lg font-bold text-sm">Watch Reels</button>
-        </div>
-    </div>
-
     <div id="reels" class="section active">
-        <div class="reels-container" id="reelsContainer">
-            <div class="reel-box">
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/S_S7pD8O02Y?autoplay=1&mute=1&controls=0&loop=1&playlist=S_S7pD8O02Y&modestbranding=1&rel=0&iv_load_policy=3" frameborder="0"></iframe>
+        <div class="reels-scroll" id="reelsContainer">
+            <div class="reel-box" onclick="toggleVolume('v1')">
+                <div class="video-wrap">
+                    <iframe id="v1" src="https://www.youtube.com/embed/S_S7pD8O02Y?autoplay=1&mute=1&controls=0&loop=1&playlist=S_S7pD8O02Y&enablejsapi=1" frameborder="0"></iframe>
                 </div>
-                <div class="absolute bottom-12 left-4 z-50">
-                    <p class="font-bold mb-1">mansingh_rathore <i class="fas fa-check-circle blue-tick"></i></p>
-                    <p class="text-sm shadow-lg">The Vision: Dubai HQ 2030 🇦🇪</p>
+                <div id="sound-v1" class="sound-overlay"><i class="fas fa-volume-up text-5xl text-white/50"></i></div>
+                <div class="absolute bottom-10 left-4 z-50">
+                    <p class="font-bold flex items-center">mansingh_rathore <i class="fas fa-check-circle text-blue-500 ml-1"></i></p>
+                    <p class="text-sm">Dubai HQ 2030 Vision 🇦🇪 #Trading</p>
                 </div>
-                <div class="absolute bottom-20 right-4 flex flex-col gap-6 text-2xl z-50">
-                    <i class="fas fa-heart text-red-500 animate__animated animate__heartBeat animate__infinite"></i>
+                <div class="absolute bottom-20 right-4 flex flex-col gap-6 text-2xl">
+                    <i class="fas fa-heart text-red-500"></i>
                     <i class="fas fa-comment"></i>
-                    <i class="fas fa-paper-plane"></i>
+                    <i class="fas fa-paper-plane" onclick="tab('chat')"></i>
                 </div>
             </div>
-            <div class="reel-box">
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1&mute=1&controls=0&loop=1&playlist=tgbNymZ7vqY&modestbranding=1" frameborder="0"></iframe>
+            <div class="reel-box" onclick="toggleVolume('v2')">
+                <div class="video-wrap">
+                    <iframe id="v2" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1&mute=1&controls=0&loop=1&playlist=tgbNymZ7vqY&enablejsapi=1" frameborder="0"></iframe>
                 </div>
-                <div class="absolute bottom-12 left-4 z-50">
-                    <p class="font-bold mb-1">mansingh_rathore <i class="fas fa-check-circle blue-tick"></i></p>
-                    <p class="text-sm">SMC Liquidity Sweep 📉 #Trading</p>
+                <div id="sound-v2" class="sound-overlay"><i class="fas fa-volume-up text-5xl text-white/50"></i></div>
+                <div class="absolute bottom-10 left-4 z-50">
+                    <p class="font-bold flex items-center">mansingh_rathore <i class="fas fa-check-circle text-blue-500 ml-1"></i></p>
+                    <p class="text-sm">SMC Strategy Mastery 📈</p>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="chat" class="section">
-        <div class="p-4 border-b border-[#262626] flex items-center gap-4">
-            <i class="fas fa-arrow-left" onclick="showTab('home')"></i>
-            <span class="font-bold">VibeNet Support</span>
+        <div class="p-4 border-b border-[#262626] flex items-center gap-3">
+            <i class="fas fa-arrow-left" onclick="tab('reels')"></i>
+            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs">MS</div>
+            <span class="font-bold">Mansingh <i class="fas fa-check-circle text-blue-500"></i></span>
         </div>
-        <div id="chatBox" class="p-4 space-y-4 h-[75vh] overflow-y-auto">
-            <div class="bg-[#262626] p-3 rounded-2xl w-fit text-sm msg-in">System: VibeNet Ultra Active! 🚀</div>
+        <div id="chatFlow" class="p-4 h-[75vh] overflow-y-auto flex flex-col">
+            <div class="msg bg-[#262626] self-start">Welcome to VibeNet Messenger! 🚀</div>
         </div>
         <div class="fixed bottom-16 w-full p-3 bg-black flex gap-2 border-t border-[#262626]">
-            <input id="msgInput" type="text" class="flex-1 bg-transparent border border-[#333] rounded-full px-4 py-2 text-sm outline-none" placeholder="Type a message...">
+            <input id="chatInput" type="text" class="flex-1 bg-transparent border border-[#333] rounded-full px-4 py-2 text-sm outline-none" placeholder="Message...">
             <button onclick="sendMsg()" class="text-blue-500 font-bold px-3">Send</button>
         </div>
     </div>
 
-    <div class="nav-bottom">
-        <i class="fas fa-home text-2xl" onclick="showTab('home')"></i>
+    <div class="nav">
+        <i class="fas fa-home text-2xl" onclick="tab('reels')"></i>
         <i class="fas fa-search text-2xl"></i>
-        <i class="fas fa-plus-square text-2xl"></i>
-        <i class="fas fa-play-circle text-2xl" onclick="showTab('reels')"></i>
-        <i class="fas fa-user-circle text-2xl" onclick="showTab('home')"></i>
+        <i class="fas fa-play-circle text-2xl text-blue-500" onclick="tab('reels')"></i>
+        <i class="fab fa-facebook-messenger text-2xl" onclick="tab('chat')"></i>
+        <i class="fas fa-user-circle text-2xl"></i>
     </div>
 
     <script>
-        function showTab(id) {
+        function tab(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
-        function sendMsg() {
-            const input = document.getElementById('msgInput');
-            if(input.value.trim() !== "") {
-                const box = document.getElementById('chatBox');
-                const div = document.createElement('div');
-                div.className = "bg-blue-600 p-3 rounded-2xl w-fit ml-auto text-sm msg-pop";
-                div.innerText = input.value;
-                box.appendChild(div);
-                input.value = "";
-                box.scrollTop = box.scrollHeight;
-            }
+        // UNMUTE & SOUND CONTROL
+        function toggleVolume(id) {
+            const iframe = document.getElementById(id);
+            const overlay = document.getElementById('sound-' + id);
+            
+            // Unmute command
+            iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+            iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            
+            overlay.style.opacity = "1";
+            setTimeout(() => overlay.style.opacity = "0", 800);
         }
 
-        // Auto-Play Hack for Mobile Browsers
-        document.addEventListener('click', function() {
-            document.querySelectorAll('iframe').forEach(f => {
-                f.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-            });
-        }, {once: true});
+        // ANIMATED MESSAGE SENDING
+        function sendMsg() {
+            const input = document.getElementById('chatInput');
+            if(input.value.trim() !== "") {
+                const flow = document.getElementById('chatFlow');
+                const div = document.createElement('div');
+                div.className = "msg bg-blue-600 self-end text-white";
+                div.innerText = input.value;
+                flow.appendChild(div);
+                input.value = "";
+                flow.scrollTop = flow.scrollHeight;
+            }
+        }
     </script>
 </body>
-  </html>
-  
+</html>
+    
